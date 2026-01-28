@@ -41,7 +41,6 @@ INSTALLED_APPS = [
     'accounts',
     'organizations',
     'subscriptions',
-    'stadium',
     'sync',
     'coredata',
     'competitions',

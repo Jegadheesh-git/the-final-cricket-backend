@@ -1,4 +1,4 @@
-from stadium.models import Stadium
+# from stadium.models import Stadium
 from .models import SyncOperation
 
 def apply_operation(*, scope, device_id, op):
@@ -11,6 +11,8 @@ def apply_operation(*, scope, device_id, op):
         operation = op["operation"]
     ).exists():
         return {"sync_id":sync_id, "status":"SKIPPED"}
+    
+    """
     
     if op["entity"] == "stadium":
         if op["operation"] == "CREATE":
@@ -46,6 +48,9 @@ def apply_operation(*, scope, device_id, op):
     )
 
     return {"sync_id":sync_id, "status":"APPLIED"}
+
+    """
+
 from django.db import transaction
 from django.shortcuts import get_object_or_404
 from matches.models import Match, PlayingXI

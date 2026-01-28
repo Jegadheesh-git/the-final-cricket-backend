@@ -1,7 +1,10 @@
 from django.urls import path
 from .views import (
     MatchViewSet,
+    MatchTypeListView,
     MatchDetailView,
+    MatchDetailedViewSet,
+
     MatchStateUpdateView,
     PrepareOfflineMatchView,
     ConfirmOnlineMatchView,
@@ -19,11 +22,17 @@ from .views import (
 
 from rest_framework.routers import SimpleRouter
 router = SimpleRouter()
-router.register(r'matches', MatchViewSet)
+router.register(r'matches', MatchViewSet, basename="matches")
+
+router.register(r'list', MatchDetailedViewSet, basename="match-list")
+
 
 urlpatterns = router.urls
 
 urlpatterns += [
+
+    path("matchtypes/", MatchTypeListView.as_view(), name="match-types"),
+
     path("matches/<uuid:match_id>/prepare-offline/", PrepareOfflineMatchView.as_view(), name="prepare-offline"),
     path("matches/<uuid:match_id>/confirm-online/", ConfirmOnlineMatchView.as_view(), name="confirm-online"),
     path("matches/<uuid:match_id>/start/", StartMatchView.as_view(), name="start-match"),

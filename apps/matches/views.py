@@ -2,9 +2,8 @@ import hashlib
 import json
 from django.utils import timezone
 from rest_framework.views import APIView
-from rest_framework.generics import GenericAPIView
-from rest_framework.permissions import IsAuthenticated
-from rest_framework.pagination import PageNumberPagination
+from rest_framework.generics import ListAPIView
+from rest_framework.permissions import IsAuthenticated, AllowAny
 from rest_framework.response import Response
 from rest_framework import status
 from django.db import transaction
@@ -12,10 +11,13 @@ from rest_framework.exceptions import ValidationError
 from django.shortcuts import get_object_or_404
 
 
-from backend.core.viewsets import OwnedModelViewSet
+from backend.core.viewsets import OwnedModelViewSet, OwnedModelListView
 from competitions.models import Competition, Series
-from .models import Match, PlayingXI, Toss, Innings
-from .serializers import MatchCreateSerializer, PlayingXIInputSerializer, TossCreateSerializer, InningsCreateSerializer, MatchDetailSerializer
+from .models import Match, PlayingXI, Toss, Innings, MatchType
+from .serializers import (
+    MatchCreateSerializer, PlayingXIInputSerializer, TossCreateSerializer, 
+    InningsCreateSerializer, MatchDetailSerializer, MatchTypeSerializer
+    )
 from .utils import (
     ensure_owner,
     ensure_match_ready,
@@ -33,6 +35,12 @@ from matches.services.innings_transition import (
     prepare_next_innings,
     end_match,
 )
+
+class MatchTypeListView(ListAPIView):
+    permission_classes = [AllowAny]
+    serializer_class = MatchTypeSerializer
+    pagination_class = None
+    queryset = MatchType.objects.filter(is_active=True)
 
 class MatchViewSet(OwnedModelViewSet):
     
@@ -62,7 +70,11 @@ class MatchViewSet(OwnedModelViewSet):
             status=status.HTTP_201_CREATED
         )
         """
-    
+
+class MatchDetailedViewSet(OwnedModelViewSet):
+    serializer_class = MatchDetailSerializer
+    queryset = Match.objects.all()
+
 class PrepareOfflineMatchView(APIView):
     permission_classes = [IsAuthenticated]
     def post(self, request, match_id):

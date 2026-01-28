@@ -32,8 +32,8 @@ def start_scoring_session(match_id: UUID) -> dict:
         batting_team = innings.batting_team
         bowling_team = innings.bowling_team
     else:
-        batting_team = match.team_a
-        bowling_team = match.team_b
+        batting_team = match.team1
+        bowling_team = match.team2
 
     # Playing XI (authoritative source)
     batting_players = Player.objects.filter(

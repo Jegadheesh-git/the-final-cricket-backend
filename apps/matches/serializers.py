@@ -1,6 +1,11 @@
 from rest_framework import serializers
-from .models import Match
-from coredata.models import Team 
+from .models import Match, MatchType
+from coredata.models import Team
+
+class MatchTypeSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = MatchType
+        fields = ('id','name','code')
 
 class MatchCreateSerializer(serializers.ModelSerializer):
     class Meta:
@@ -69,19 +74,48 @@ class TeamMiniSerializer(serializers.ModelSerializer):
 
 
 class MatchDetailSerializer(serializers.ModelSerializer):
-    competition = serializers.PrimaryKeyRelatedField(read_only=True)
-    series = serializers.PrimaryKeyRelatedField(read_only=True)
 
-    team1 = TeamMiniSerializer(read_only=True)
-    team2 = TeamMiniSerializer(read_only=True)
+    team1_id = serializers.CharField(source="team1.id", read_only=True)
+    team2_id = serializers.CharField(source="team2.id", read_only=True)
+
+    team1_name = serializers.CharField(source="team1.name", read_only=True)
+    team2_name = serializers.CharField(source="team2.name", read_only=True)
+
+    competition = serializers.CharField(source="competition.id", read_only=True)
+
+    match_type_name = serializers.CharField(
+        source="match_type.name",
+        read_only=True
+    )
+    match_label = serializers.SerializerMethodField()
 
     class Meta:
         model = Match
         fields = (
             "id",
+            "match_label",
+            "match_type_name",
+            "match_mode",
+            "team1_id",
+            "team2_id",
+            "team1_name",
+            "team2_name",
             "competition",
-            "series",
-            "team1",
-            "team2",
-            "state"
+            "match_date",
+            "state",
         )
+
+    def get_match_label(self, obj):
+        """
+        Example:
+        India vs Australia on 2026-01-28 (World Cup)
+        India vs Australia on 2026-01-28 (CASUAL)
+        """
+        if obj.competition:
+            context = obj.competition.name
+        elif obj.series:
+            context = obj.series.name
+        else:
+            context = "CASUAL"
+
+        return f"{obj.team1.name} vs {obj.team2.name} on {obj.match_date} ({context})"

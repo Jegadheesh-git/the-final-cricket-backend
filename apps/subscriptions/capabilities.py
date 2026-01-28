@@ -11,7 +11,7 @@ PLAN_CAPABILITIES = {
     },
 
     "ORG_BASIC_MONTHLY": {
-        "limits": {"devices":2,"users":2,"stadiums":5},
+        "limits": {"devices":2,"users":3,"stadiums":5},
         "features": {"invite_users":True}
     },
 

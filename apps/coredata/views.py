@@ -7,6 +7,7 @@ from backend.core.viewsets import OwnedModelViewSet, OwnedModelListView
 class NationalityListView(ListAPIView):
     permission_classes = [AllowAny]
     serializer_class = NationalitySerializer
+    pagination_class = None
     queryset = Nationality.objects.filter(is_active=True)
 
 class StadiumViewSet(OwnedModelViewSet):
