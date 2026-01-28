@@ -11,6 +11,13 @@ router = SimpleRouter()
 router.register(r'tournaments', TournamentViewSet)
 router.register(r'competitions', CompetitionViewSet)
 
+router.register(
+    r"my-tournaments",
+    TournamentListView,
+    basename="my-tournaments"
+)
+
+
 urlpatterns = router.urls
 
 urlpatterns += [
@@ -32,14 +39,20 @@ urlpatterns += [
 ]
 
 urlpatterns += [
-    path(
-        "my-tournaments/",
-        TournamentListView.as_view({"get": "list"}),
-        name="tournament-list",
-    ),
+    
+    
     path(
         "my-competitions/",
         CompetitionListView.as_view({"get": "list"}),
         name="tournament-list",
     ),
+    
 ]
+
+"""
+    path(
+        "my-tournaments/",
+        TournamentListView.as_view({"get": "list"}),
+        name="tournament-list",
+    ),
+    """

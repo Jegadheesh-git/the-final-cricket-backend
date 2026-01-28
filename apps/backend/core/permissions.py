@@ -8,6 +8,10 @@ class ScopeRBACPermission(BasePermission):
     """
 
     def has_permission(self, request, view):
+        # ✅ Allow preflight
+        if request.method == "OPTIONS":
+            return True
+        
         scope = getattr(request, "scope", None)
 
         if scope is None:
@@ -24,6 +28,10 @@ class ScopeRBACPermission(BasePermission):
 
 class SubscriptionPermission(BasePermission):
     def has_permission(self, request, view):
+
+        if request.method == "OPTIONS":
+            return True
+        
         scope = request.scope
 
         # No subscription -> block writes

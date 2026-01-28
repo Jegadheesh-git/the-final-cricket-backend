@@ -18,9 +18,10 @@ class TournamentViewSet(OwnedModelViewSet):
     queryset = Tournament.objects.all()
     serializer_class = TournamentSerializer
 
-class TournamentListView(OwnedModelListView):
-    queryset = Tournament.objects.all()
-    serializer_class = TournamentSerializer
+class TournamentListView(OwnedModelListView): 
+    queryset = Tournament.objects.all() 
+    serializer_class = TournamentSerializer 
+
 
 class CompetitionViewSet(OwnedModelViewSet):
     queryset = Competition.objects.all()
