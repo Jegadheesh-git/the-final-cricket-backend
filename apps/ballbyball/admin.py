@@ -1,4 +1,3 @@
 from django.contrib import admin
-from .models.ball import Ball
+
 # Register your models here.
-admin.site.register(Ball)

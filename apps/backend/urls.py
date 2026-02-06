@@ -27,6 +27,7 @@ urlpatterns = [
     path('api/matches/', include("matches.urls")),
     path('api/scoring/', include("scoring.urls")),
     path('api/sync/', include("sync.urls")),
+    path('api/ballbyball/', include("ballbyball.urls"))
 ]
 
 from django.conf import settings

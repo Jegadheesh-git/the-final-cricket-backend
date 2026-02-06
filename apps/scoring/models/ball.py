@@ -85,6 +85,11 @@ class Ball(models.Model):
 
     # Scoring facts (NON-DERIVABLE)
     runs_off_bat = models.PositiveSmallIntegerField(default=0)
+    completed_runs = models.PositiveSmallIntegerField(
+        default=0,
+        help_text="Number of runs physically completed by running"
+    )
+
     extra_runs = models.PositiveSmallIntegerField(default=0)
 
     # Extras breakdown (facts)

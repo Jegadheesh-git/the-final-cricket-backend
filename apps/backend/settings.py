@@ -46,6 +46,7 @@ INSTALLED_APPS = [
     'competitions',
     'matches',
     'scoring',
+    'ballbyball'
 ]
 
 MIDDLEWARE = [
