@@ -117,7 +117,11 @@ def persist_ball_and_derived_statistics(
     leg_bye_runs = 0
 
     if completed_runs > 0:
-        if is_bye:
+        # Wides can include physically completed runs, but those are extras,
+        # never runs_off_bat.
+        if is_wide:
+            pass
+        elif is_bye:
             bye_runs = completed_runs
         elif is_leg_bye:
             leg_bye_runs = completed_runs

@@ -89,6 +89,8 @@ class Umpire(OwnedModel):
 
 class Player(OwnedModel):
     # ---- Identity ----
+    ci_player_id = models.CharField(max_length=100, blank=True, default="")
+    jersey_number = models.CharField(max_length=20, blank=True, default="")
     first_name = models.CharField(max_length=100)
     middle_name = models.CharField(max_length=100, blank=True)
     last_name = models.CharField(max_length=100, blank=True)

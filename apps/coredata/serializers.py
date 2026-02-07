@@ -53,6 +53,8 @@ class PlayerSerializer(OwnedModelSerializer):
         model = Player
         fields = (
             "id",
+            "ci_player_id",
+            "jersey_number",
             "first_name",
             "middle_name",
             "last_name",
