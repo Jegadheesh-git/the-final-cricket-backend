@@ -46,11 +46,21 @@ class OwnedModel(models.Model):
 class Stadium(OwnedModel):
     name = models.CharField(max_length=150)
     city = models.CharField(max_length=100)
+    ci_id = models.CharField(max_length=100, blank=True, default="")
+    specific_area = models.CharField(max_length=150, blank=True, default="")
+    established_year = models.PositiveSmallIntegerField(null=True, blank=True)
+    floodlights = models.PositiveSmallIntegerField(null=True, blank=True)
+    time_zone = models.CharField(max_length=50, blank=True, default="")
 
     nationality = models.ForeignKey(
         Nationality,
         on_delete = models.PROTECT,
         related_name="stadiums" 
+    )
+    home_teams = models.ManyToManyField(
+        "Team",
+        blank=True,
+        related_name="home_grounds"
     )
 
     class Meta:
@@ -68,6 +78,10 @@ class Stadium(OwnedModel):
 
 class Umpire(OwnedModel):
     name = models.CharField(max_length=150)
+    last_name = models.CharField(max_length=150, blank=True, default="")
+    short_name = models.CharField(max_length=50, blank=True, default="")
+    ci_id = models.CharField(max_length=100, blank=True, default="")
+    date_of_birth = models.DateField(null=True, blank=True)
     nationality = models.ForeignKey(
         Nationality,
         on_delete = models.PROTECT,
@@ -91,6 +105,8 @@ class Player(OwnedModel):
     # ---- Identity ----
     ci_player_id = models.CharField(max_length=100, blank=True, default="")
     jersey_number = models.CharField(max_length=20, blank=True, default="")
+    debut_year_intl = models.PositiveSmallIntegerField(null=True, blank=True)
+    retirement_year_intl = models.PositiveSmallIntegerField(null=True, blank=True)
     first_name = models.CharField(max_length=100)
     middle_name = models.CharField(max_length=100, blank=True)
     last_name = models.CharField(max_length=100, blank=True)
@@ -152,6 +168,7 @@ class Player(OwnedModel):
         null=True,
         blank=True
     )
+    bowling_types = models.JSONField(default=list, blank=True)
     BATTING_TYPE_CHOICES = (
         ("AGGRESSIVE", "Aggressive"),
         ("ANCHOR", "Anchor"),
@@ -191,8 +208,23 @@ class Team(OwnedModel):
         ("DOMESTIC", "Domestic"),
         ("LEAGUE", "League"),
     )
+    TEAM_CATEGORY_CHOICES = (
+        ("MEN", "Men"),
+        ("WOMEN", "Women"),
+        ("U19", "Under 19"),
+        ("U16", "Under 16"),
+        ("MIXED", "Mixed"),
+    )
     name = models.CharField(max_length=150)
     short_name = models.CharField(max_length=20)
+    ci_id = models.CharField(max_length=100, blank=True, default="")
+    team_category = models.CharField(
+        max_length=10,
+        choices=TEAM_CATEGORY_CHOICES,
+        null=True,
+        blank=True
+    )
+    established_year = models.PositiveSmallIntegerField(null=True, blank=True)
     team_type = models.CharField(
         max_length=20,
         choices=TEAM_TYPE_CHOICES
@@ -203,6 +235,11 @@ class Team(OwnedModel):
         null=True,
         blank=True,
         related_name="teams"
+    )
+    master_squad = models.ManyToManyField(
+        "Player",
+        blank=True,
+        related_name="master_teams"
     )
     class Meta:
         unique_together = (

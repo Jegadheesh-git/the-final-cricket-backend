@@ -1,6 +1,6 @@
 from rest_framework import serializers
 from coredata.serializers import OwnedModelSerializer
-from .models import Tournament, Competition, CompetitionTeam
+from .models import Tournament, Competition, CompetitionTeam, Series
 
 class TournamentSerializer(OwnedModelSerializer):
     class Meta:
@@ -9,6 +9,9 @@ class TournamentSerializer(OwnedModelSerializer):
             "id",
             "name",
             "short_name",
+            "ci_id",
+            "established_year",
+            "end_year",
             "tournament_type",
             "nationality",
             "owner_type",
@@ -19,15 +22,46 @@ class TournamentSerializer(OwnedModelSerializer):
 
 
 class CompetitionSerializer(OwnedModelSerializer):
+    teams = serializers.PrimaryKeyRelatedField(
+        many=True,
+        read_only=True
+    )
     class Meta:
         model = Competition
         fields = (
             "id",
             "name",
+            "ci_id",
             "tournament",
             "season",
             "start_date",
             "end_date",
+            "established_year",
+            "end_year",
+            "teams",
+            "owner_type",
+            "owner_id",
+            "is_locked",
+            "is_active",
+        )
+
+class SeriesSerializer(OwnedModelSerializer):
+    teams = serializers.PrimaryKeyRelatedField(
+        many=True,
+        read_only=True
+    )
+    class Meta:
+        model = Series
+        fields = (
+            "id",
+            "name",
+            "ci_id",
+            "series_type",
+            "start_date",
+            "end_date",
+            "established_year",
+            "end_year",
+            "teams",
             "owner_type",
             "owner_id",
             "is_locked",

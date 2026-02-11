@@ -5,6 +5,9 @@ from coredata.models import Nationality, OwnedModel, Team, Player
 class Tournament(OwnedModel):
     name = models.CharField(max_length=150)
     short_name = models.CharField(max_length=50)
+    ci_id = models.CharField(max_length=100, blank=True, default="")
+    established_year = models.PositiveSmallIntegerField(null=True, blank=True)
+    end_year = models.PositiveSmallIntegerField(null=True, blank=True)
     TOURNAMENT_TYPE_CHOICES = (
         ("INTERNATIONAL", "International"),
         ("DOMESTIC", "Domestic"),
@@ -40,6 +43,7 @@ class Tournament(OwnedModel):
 
 class Competition(OwnedModel):
     name = models.CharField(max_length=150)
+    ci_id = models.CharField(max_length=100, blank=True, default="")
     # Optional link to tournament
     tournament = models.ForeignKey(
         Tournament,
@@ -55,6 +59,14 @@ class Competition(OwnedModel):
     )
     start_date = models.DateField(null=True, blank=True)
     end_date = models.DateField(null=True, blank=True)
+    established_year = models.PositiveSmallIntegerField(null=True, blank=True)
+    end_year = models.PositiveSmallIntegerField(null=True, blank=True)
+    teams = models.ManyToManyField(
+        Team,
+        through="CompetitionTeam",
+        related_name="competitions",
+        blank=True,
+    )
     is_active = models.BooleanField(default=True)
     is_locked = models.BooleanField(default=False)
     class Meta:
@@ -125,6 +137,7 @@ class CompetitionSquad(models.Model):
 class Series(OwnedModel):
 
     name = models.CharField(max_length=150)
+    ci_id = models.CharField(max_length=100, blank=True, default="")
     SERIES_TYPE_CHOICES = (
         ("BILATERAL", "Bilateral"),
         ("TRI", "Tri-series"),
@@ -138,6 +151,14 @@ class Series(OwnedModel):
     )
     start_date = models.DateField(null=True, blank=True)
     end_date = models.DateField(null=True, blank=True)
+    established_year = models.PositiveSmallIntegerField(null=True, blank=True)
+    end_year = models.PositiveSmallIntegerField(null=True, blank=True)
+    teams = models.ManyToManyField(
+        Team,
+        through="SeriesTeam",
+        related_name="series",
+        blank=True,
+    )
     is_active = models.BooleanField(default=True)
     is_locked = models.BooleanField(default=False)  # :lock: critical
     class Meta:
@@ -154,7 +175,7 @@ class SeriesTeam(models.Model):
     series = models.ForeignKey(
         Series,
         on_delete=models.CASCADE,
-        related_name="teams"
+        related_name="series_teams"
     )
     team = models.ForeignKey(
         Team,

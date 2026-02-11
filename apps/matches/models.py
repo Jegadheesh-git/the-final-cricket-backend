@@ -34,6 +34,9 @@ class MatchType(models.Model):
 
 class Match(OwnedModel):
     id = models.UUIDField(primary_key=True, default=uuid.uuid4, editable=False)
+    ci_id = models.CharField(max_length=100, blank=True, default="")
+    drs_count = models.PositiveSmallIntegerField(null=True, blank=True)
+    floodlights_count = models.PositiveSmallIntegerField(null=True, blank=True)
     # Context (exactly ONE must be set)
     competition = models.ForeignKey(
         Competition,

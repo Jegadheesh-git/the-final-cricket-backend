@@ -5,10 +5,10 @@ from rest_framework.response import Response
 from rest_framework.permissions import IsAuthenticated
 from rest_framework.exceptions import ValidationError, PermissionDenied
 from backend.core.viewsets import OwnedModelViewSet, OwnedModelListView
-from .models import Tournament, Competition, CompetitionTeam, CompetitionSquad
+from .models import Tournament, Competition, CompetitionTeam, CompetitionSquad, Series, SeriesTeam, SeriesSquad
 from coredata.models import Team, Player
 from .serializers import (
-    TournamentSerializer, CompetitionSerializer, 
+    TournamentSerializer, CompetitionSerializer, SeriesSerializer,
     CompetitionTeamBulkInputSerializer, CompetitionSquadBulkInputSerializer,
     SeriesTeamBulkInputSerializer, SeriesSquadBulkInputSerializer
 )
@@ -30,6 +30,14 @@ class CompetitionViewSet(OwnedModelViewSet):
 class CompetitionListView(OwnedModelListView):
     queryset = Competition.objects.all()
     serializer_class = CompetitionSerializer
+
+class SeriesViewSet(OwnedModelViewSet):
+    queryset = Series.objects.all()
+    serializer_class = SeriesSerializer
+
+class SeriesListView(OwnedModelListView):
+    queryset = Series.objects.all()
+    serializer_class = SeriesSerializer
 
 def validate_competition_editable(request, competition):
     scope = request.scope

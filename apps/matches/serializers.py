@@ -12,6 +12,7 @@ class MatchCreateSerializer(serializers.ModelSerializer):
         model = Match
         fields = (
             "id",
+            "ci_id",
             "competition",
             "series",
             "match_type",
@@ -20,6 +21,8 @@ class MatchCreateSerializer(serializers.ModelSerializer):
             "stadium",
             "match_date",
             "start_time",
+            "drs_count",
+            "floodlights_count",
             "match_mode",
         )
     def validate(self, data):
@@ -102,6 +105,9 @@ class MatchDetailSerializer(serializers.ModelSerializer):
             "team2_name",
             "competition",
             "match_date",
+            "ci_id",
+            "drs_count",
+            "floodlights_count",
             "state",
         )
 

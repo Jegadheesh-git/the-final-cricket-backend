@@ -2,6 +2,7 @@ from django.urls import path
 from .views import (
     TournamentViewSet, TournamentListView,
     CompetitionViewSet, CompetitionListView,
+    SeriesViewSet, SeriesListView,
     CompetitionTeamsView, CompetitionSquadView,
     SeriesTeamsView, SeriesSquadView
 )
@@ -10,6 +11,7 @@ from rest_framework.routers import SimpleRouter
 router = SimpleRouter()
 router.register(r'tournaments', TournamentViewSet)
 router.register(r'competitions', CompetitionViewSet)
+router.register(r'series', SeriesViewSet)
 
 router.register(
     r"my-tournaments",
@@ -45,6 +47,11 @@ urlpatterns += [
         "my-competitions/",
         CompetitionListView.as_view({"get": "list"}),
         name="tournament-list",
+    ),
+    path(
+        "my-series/",
+        SeriesListView.as_view({"get": "list"}),
+        name="series-list",
     ),
     
 ]
