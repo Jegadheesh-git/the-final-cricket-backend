@@ -27,6 +27,8 @@ from scoring.models import (
     BallTrajectory,
     BallReleaseData,
     BallVideo,
+    BallFielding,
+    BallDRS,
 )
 from ballbyball.services.calculate_next_ball_sequence_numbers import (
     calculate_next_ball_sequence_numbers,
@@ -53,6 +55,14 @@ def persist_ball_and_derived_statistics(
     is_no_ball,
     is_bye,
     is_leg_bye,
+    is_boundary=False,
+    is_short_run=False,
+    is_quick_running=False,
+    is_free_hit=False,
+    striker_hand="RIGHT",
+    bowler_hand="RIGHT",
+    umpire_bowler_end_id=None,
+    umpire_square_leg_id=None,
     dismissed_player_id=None,
     wicket_type=None,
     dismissed_by_id=None,
@@ -65,6 +75,8 @@ def persist_ball_and_derived_statistics(
     trajectory=None,
     release=None,
     video=None,
+    fielding=None,
+    drs=None,
 
 ):
     def to_snake(value):
@@ -158,6 +170,10 @@ def persist_ball_and_derived_statistics(
         striker=striker,
         non_striker=non_striker,
         bowler=bowler,
+        striker_hand=striker_hand or "RIGHT",
+        bowler_hand=bowler_hand or "RIGHT",
+        umpire_bowler_end_id=umpire_bowler_end_id,
+        umpire_square_leg_id=umpire_square_leg_id,
         runs_off_bat=runs_off_bat,
         completed_runs=completed_runs,
         extra_runs=extra_runs,
@@ -166,7 +182,10 @@ def persist_ball_and_derived_statistics(
         wide_runs=wide_runs,
         no_ball_runs=no_ball_runs,
         penalty_runs=penalty_runs,
-        is_boundary=completed_runs in (4, 6),
+        is_boundary=is_boundary,
+        is_short_run=is_short_run,
+        is_quick_running=is_quick_running,
+        is_free_hit=is_free_hit,
     )
 
     if wicket_type and dismissed_player_id:
@@ -205,6 +224,35 @@ def persist_ball_and_derived_statistics(
         BallVideo.objects.create(
             ball=ball,
             **normalize_keys(video),
+        )
+
+    if fielding:
+        fielding_payload = normalize_keys(fielding)
+        # Accept UUIDs from frontend for fielder1/fielder2
+        if "fielder1" in fielding_payload:
+            fielding_payload["fielder1_id"] = fielding_payload.pop("fielder1")
+        if "fielder2" in fielding_payload:
+            fielding_payload["fielder2_id"] = fielding_payload.pop("fielder2")
+        BallFielding.objects.create(
+            ball=ball,
+            **fielding_payload,
+        )
+
+    if drs:
+        drs_payload = normalize_keys(drs)
+        if "review_team_id" in drs_payload:
+            drs_payload["review_team_id"] = drs_payload["review_team_id"]
+        if "review_team" in drs_payload:
+            drs_payload["review_team_id"] = drs_payload.pop("review_team")
+        if "decision_given_by_umpire" in drs_payload:
+            drs_payload["decision_given_by_umpire_id"] = drs_payload.pop(
+                "decision_given_by_umpire"
+            )
+        if "third_umpire" in drs_payload:
+            drs_payload["third_umpire_id"] = drs_payload.pop("third_umpire")
+        BallDRS.objects.create(
+            ball=ball,
+            **drs_payload,
         )
 
     if trajectory:
@@ -246,7 +294,7 @@ def persist_ball_and_derived_statistics(
         player=striker,
     )
     batter.runs += runs_off_bat
-    if is_legal_delivery:
+    if not is_wide:
         batter.balls += 1
     if runs_off_bat == 4:
         batter.fours += 1

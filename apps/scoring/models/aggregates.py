@@ -25,6 +25,7 @@ class InningsAggregate(models.Model):
 
     # Extras
     extras = models.PositiveIntegerField(default=0)
+    extra_penalty_runs = models.PositiveIntegerField(default=0)
 
     # Chase & target (nullable by design)
     is_chasing = models.BooleanField(default=False)

@@ -10,6 +10,7 @@ from scoring.models.spatial import BallSpatialOutcome
 from scoring.models.trajectory import BallTrajectory
 from scoring.models.release import BallReleaseData
 from scoring.models.video import BallVideo
+from scoring.models.drs import BallDRS
 from scoring.models.aggregates import InningsAggregate
 from scoring.engine.scoring_engine import apply_scoring_engine
 from scoring.engine.ball_outcome import build_ball_outcome
@@ -71,6 +72,10 @@ def submit_ball(ball_data: dict, user) -> UUID:
         striker_id=ball_data["striker"],
         non_striker_id=ball_data["non_striker"],
         bowler_id=ball_data["bowler"],
+        striker_hand=ball_data.get("striker_hand") or "RIGHT",
+        bowler_hand=ball_data.get("bowler_hand") or "RIGHT",
+        umpire_bowler_end_id=ball_data.get("umpire_bowler_end"),
+        umpire_square_leg_id=ball_data.get("umpire_square_leg"),
         runs_off_bat=ball_data["runs"].get("runs_off_bat", 0),
         extra_runs=ball_data["runs"].get("extras", 0),
         bye_runs=ball_data["runs"].get("byes", 0),
@@ -114,6 +119,21 @@ def submit_ball(ball_data: dict, user) -> UUID:
         BallVideo.objects.create(
             ball=ball,
             **ball_data["video"]
+        )
+
+    if ball_data.get("drs"):
+        drs_payload = ball_data["drs"].copy()
+        if "review_team" in drs_payload:
+            drs_payload["review_team_id"] = drs_payload.pop("review_team")
+        if "decision_given_by_umpire" in drs_payload:
+            drs_payload["decision_given_by_umpire_id"] = drs_payload.pop(
+                "decision_given_by_umpire"
+            )
+        if "third_umpire" in drs_payload:
+            drs_payload["third_umpire_id"] = drs_payload.pop("third_umpire")
+        BallDRS.objects.create(
+            ball=ball,
+            **drs_payload
         )
 
     apply_scoring_engine(ball.id)

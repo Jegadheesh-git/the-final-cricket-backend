@@ -111,6 +111,15 @@ class RecordSingleBallDeliveryView(APIView):
             is_no_ball=payload["is_no_ball"],
             is_bye=payload["is_bye"],
             is_leg_bye=payload["is_leg_bye"],
+            is_boundary=payload["is_boundary"],
+            is_short_run=payload["is_short_run"],
+            is_quick_running=payload["is_quick_running"],
+            is_free_hit=payload["is_free_hit"],
+            striker_hand=payload.get("striker_hand"),
+            bowler_hand=payload.get("bowler_hand"),
+            umpire_bowler_end_id=payload.get("umpire_bowler_end"),
+            umpire_square_leg_id=payload.get("umpire_square_leg"),
+            drs=payload.get("drs"),
             wicket_type=payload.get("wicket_type"),
             dismissed_player_id=payload.get("dismissed_player_id"),
             dismissed_by_id=payload.get("dismissed_by_id"),
@@ -123,6 +132,7 @@ class RecordSingleBallDeliveryView(APIView):
             trajectory=payload.get("trajectory"),
             release=payload.get("release"),
             video=payload.get("video"),
+            fielding=payload.get("fielding"),
         )
 
         state = build_active_innings_read_model(

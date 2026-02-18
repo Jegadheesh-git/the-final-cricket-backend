@@ -37,7 +37,7 @@ def compute_team_innings_counts(*, match):
 
 def compute_limited_overs_target(*, match):
     totals = compute_team_totals(match=match)
-    return max(totals.values()) + 1
+    return max(totals.values())
 
 
 def compute_fourth_innings_target(*, match, batting_team_id):
@@ -48,4 +48,4 @@ def compute_fourth_innings_target(*, match, batting_team_id):
         if batting_team_id == match.team2_id
         else totals.get(match.team2_id, 0)
     )
-    return (opponent_total - batting_total) + 1
+    return (opponent_total - batting_total)

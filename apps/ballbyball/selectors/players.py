@@ -28,6 +28,6 @@ def get_selectable_players(*, match, innings):
     )
 
     return {
-        "batters": list(batting_players.values("id", "first_name")),
-        "bowlers": list(bowling_players.values("id", "first_name")),
+        "batters": list(batting_players.values("id", "first_name", "batting_hand")),
+        "bowlers": list(bowling_players.values("id", "first_name", "bowling_hand")),
     }

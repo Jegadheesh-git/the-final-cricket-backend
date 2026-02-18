@@ -41,6 +41,42 @@ class BallSpatialOutcome(models.Model):
         help_text="Normalized Y coordinate for wagon wheel"
     )
 
+    # Pitch and stump zones (categorical)
+    pitch_zone = models.CharField(
+        max_length=50,
+        null=True,
+        blank=True,
+        help_text="Pitch zone selected from matrix"
+    )
+    stump_zone = models.CharField(
+        max_length=20,
+        null=True,
+        blank=True,
+        help_text="Stump zone selected from matrix"
+    )
+
+    # Structured field engine selection
+    structured_region_id = models.CharField(
+        max_length=20,
+        null=True,
+        blank=True,
+        help_text="Structured field engine region id"
+    )
+    structured_slice_index = models.PositiveSmallIntegerField(
+        null=True,
+        blank=True
+    )
+    structured_band_index = models.PositiveSmallIntegerField(
+        null=True,
+        blank=True
+    )
+    structured_position = models.CharField(
+        max_length=50,
+        null=True,
+        blank=True,
+        help_text="Resolved fielding position from structured engine"
+    )
+
     created_at = models.DateTimeField(auto_now_add=True)
 
     class Meta:

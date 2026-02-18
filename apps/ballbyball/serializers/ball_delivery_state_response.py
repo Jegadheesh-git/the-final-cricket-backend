@@ -19,6 +19,7 @@ class BallDeliveryStateResponseSerializer(serializers.Serializer):
     batting_stats = serializers.ListField()
     bowling_stats = serializers.ListField()
     players = serializers.DictField()
+    penalties = serializers.ListField(required=False)
     actions = serializers.DictField()
     events = serializers.DictField(required=False)
     next_state = serializers.DictField(required=False)

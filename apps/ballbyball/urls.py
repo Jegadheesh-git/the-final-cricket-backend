@@ -13,6 +13,7 @@ from ballbyball.api.end_active_innings import EndActiveInningsView
 from ballbyball.api.start_next_innings import StartNextInningsView
 from ballbyball.api.end_match import EndMatchView
 from ballbyball.api.apply_dls import ApplyDLSView
+from ballbyball.api.apply_penalty import ApplyPenaltyView
 from ballbyball.api.declare_innings import DeclareInningsView
 
 urlpatterns = [
@@ -55,6 +56,11 @@ urlpatterns = [
         "apply-dls/",
         ApplyDLSView.as_view(),
         name="apply-dls",
+    ),
+    path(
+        "apply-penalty/",
+        ApplyPenaltyView.as_view(),
+        name="apply-penalty",
     ),
     path(
         "declare-innings/",

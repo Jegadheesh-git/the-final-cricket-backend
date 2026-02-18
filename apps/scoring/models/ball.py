@@ -4,6 +4,7 @@ from django.conf import settings
 
 from matches.models import Match, Innings
 from coredata.models import Team, Player
+from coredata.models import Umpire
 
 class Ball(models.Model):
     """
@@ -83,6 +84,38 @@ class Ball(models.Model):
         related_name="balls_bowled"
     )
 
+    # Umpires (snapshot)
+    umpire_bowler_end = models.ForeignKey(
+        Umpire,
+        null=True,
+        blank=True,
+        on_delete=models.PROTECT,
+        related_name="balls_bowler_end"
+    )
+    umpire_square_leg = models.ForeignKey(
+        Umpire,
+        null=True,
+        blank=True,
+        on_delete=models.PROTECT,
+        related_name="balls_square_leg"
+    )
+
+    # Handedness (snapshot)
+    HAND_CHOICES = (
+        ("LEFT", "Left"),
+        ("RIGHT", "Right"),
+    )
+    striker_hand = models.CharField(
+        max_length=5,
+        choices=HAND_CHOICES,
+        default="RIGHT"
+    )
+    bowler_hand = models.CharField(
+        max_length=5,
+        choices=HAND_CHOICES,
+        default="RIGHT"
+    )
+
     # Scoring facts (NON-DERIVABLE)
     runs_off_bat = models.PositiveSmallIntegerField(default=0)
     completed_runs = models.PositiveSmallIntegerField(
@@ -105,6 +138,8 @@ class Ball(models.Model):
     # Flags (SEMANTIC ONLY)
     is_boundary = models.BooleanField(default=False)
     is_short_run = models.BooleanField(default=False)
+    is_quick_running = models.BooleanField(default=False)
+    is_free_hit = models.BooleanField(default=False)
 
     no_ball_type = models.CharField(
         max_length=20,

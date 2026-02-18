@@ -46,8 +46,26 @@ class ApplyDLSView(APIView):
             )
 
         if revised_target is not None:
+            try:
+                revised_target = int(revised_target)
+            except (TypeError, ValueError):
+                return Response({"detail": "revised_target_runs must be a number"}, status=400)
+            if revised_target < 0:
+                return Response({"detail": "revised_target_runs must be >= 0"}, status=400)
             aggregate.revised_target_runs = revised_target
+
         if revised_overs is not None:
+            try:
+                revised_overs = float(revised_overs)
+            except (TypeError, ValueError):
+                return Response({"detail": "revised_max_overs must be a number"}, status=400)
+            if revised_overs <= 0:
+                return Response({"detail": "revised_max_overs must be > 0"}, status=400)
+            if revised_overs < aggregate.completed_overs:
+                return Response(
+                    {"detail": "revised_max_overs cannot be less than completed overs"},
+                    status=400,
+                )
             aggregate.max_overs = revised_overs
 
         aggregate.save()

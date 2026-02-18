@@ -9,6 +9,19 @@ class BallInputSerializer(serializers.Serializer):
     striker = serializers.UUIDField()
     non_striker = serializers.UUIDField()
     bowler = serializers.UUIDField()
+    striker_hand = serializers.ChoiceField(
+        choices=("LEFT", "RIGHT"),
+        required=False,
+        allow_null=True
+    )
+    bowler_hand = serializers.ChoiceField(
+        choices=("LEFT", "RIGHT"),
+        required=False,
+        allow_null=True
+    )
+    umpire_bowler_end = serializers.UUIDField(required=False, allow_null=True)
+    umpire_square_leg = serializers.UUIDField(required=False, allow_null=True)
+    drs = serializers.DictField(required=False)
 
     runs = serializers.DictField()
     wicket = serializers.DictField(required=False, allow_null=True)

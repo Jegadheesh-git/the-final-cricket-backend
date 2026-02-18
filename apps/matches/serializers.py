@@ -19,6 +19,7 @@ class MatchCreateSerializer(serializers.ModelSerializer):
             "team1",
             "team2",
             "stadium",
+            "umpires",
             "match_date",
             "start_time",
             "drs_count",

@@ -90,6 +90,18 @@ def prepare_next_innings(
         batting_team = last.bowling_team
         bowling_team = last.batting_team
 
+    existing_open = Innings.objects.filter(
+        match=match,
+        batting_team=batting_team,
+        state="OPEN",
+        is_super_over=False
+    ).order_by("innings_number").first()
+
+    if existing_open:
+        existing_open.bowling_team = bowling_team
+        existing_open.save(update_fields=["bowling_team"])
+        return existing_open
+
     return Innings.objects.create(
         match=match,
         innings_number=new_number,

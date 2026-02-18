@@ -9,3 +9,6 @@ from .video import BallVideo
 from .aggregates import InningsAggregate
 from .batter_stats import BatterStats
 from .bowler_stats import BowlerStats
+from .fielding import BallFielding
+from .drs import BallDRS
+from .penalty import InningsPenalty

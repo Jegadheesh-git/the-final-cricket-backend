@@ -59,6 +59,9 @@ class InitialiseBallByBallSessionView(APIView):
             f"{' (' + competition_label + ')' if competition_label else ''}"
             f"{' on ' + date_label if date_label else ''}"
         )
+        umpires = list(
+            match.umpires.values("id", "name", "short_name", "last_name")
+        )
         return Response(
             {
                 "match_id": match.id,
@@ -68,6 +71,7 @@ class InitialiseBallByBallSessionView(APIView):
                 "batting_team_name": innings.batting_team.name,
                 "bowling_team_name": innings.bowling_team.name,
                 "current_innings_number": innings.innings_number,
+                "umpires": umpires,
             }
         )
 
@@ -165,5 +169,8 @@ class InitialiseBallByBallSessionView(APIView):
                 "batting_team_name": innings.batting_team.name,
                 "bowling_team_name": innings.bowling_team.name,
                 "current_innings_number": innings.innings_number,
+                "umpires": list(
+                    match.umpires.values("id", "name", "short_name", "last_name")
+                ),
             }
         )

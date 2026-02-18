@@ -23,6 +23,22 @@ class BallDeliveryInputPayloadSerializer(serializers.Serializer):
     is_no_ball = serializers.BooleanField(default=False)
     is_bye = serializers.BooleanField(default=False)
     is_leg_bye = serializers.BooleanField(default=False)
+    is_boundary = serializers.BooleanField(default=False)
+    is_short_run = serializers.BooleanField(default=False)
+    is_quick_running = serializers.BooleanField(default=False)
+    is_free_hit = serializers.BooleanField(default=False)
+    striker_hand = serializers.ChoiceField(
+        choices=("LEFT", "RIGHT"),
+        required=False,
+        allow_null=True
+    )
+    bowler_hand = serializers.ChoiceField(
+        choices=("LEFT", "RIGHT"),
+        required=False,
+        allow_null=True
+    )
+    umpire_bowler_end = serializers.UUIDField(required=False, allow_null=True)
+    umpire_square_leg = serializers.UUIDField(required=False, allow_null=True)
 
     wicket_type = serializers.CharField(required=False, allow_null=True)
     dismissed_player_id = serializers.UUIDField(required=False, allow_null=True)
@@ -40,3 +56,5 @@ class BallDeliveryInputPayloadSerializer(serializers.Serializer):
         child=serializers.DictField(),
         required=False
     )
+    fielding = serializers.DictField(required=False)
+    drs = serializers.DictField(required=False)
