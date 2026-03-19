@@ -18,13 +18,19 @@ class StadiumListView(OwnedModelListView):
     serializer_class = StadiumSerializer
     queryset = Stadium.objects.all()
 
+    def get_queryset(self):
+        return super().get_queryset().order_by("-created_at")
+
 class UmpireViewSet(OwnedModelViewSet):
     serializer_class = UmpireSerializer
     queryset = Umpire.objects.all()
 
 class UmpireListView(OwnedModelListView):
     serializer_class = UmpireSerializer
-    queryset = Stadium.objects.all()
+    queryset = Umpire.objects.all()
+
+    def get_queryset(self):
+        return super().get_queryset().order_by("-created_at")
 
 class PlayerViewSet(OwnedModelViewSet):
     serializer_class = PlayerSerializer
@@ -34,6 +40,9 @@ class PlayerListView(OwnedModelListView):
     serializer_class = PlayerSerializer
     queryset = Player.objects.all()
 
+    def get_queryset(self):
+        return super().get_queryset().order_by("-created_at")
+
 class TeamViewSet(OwnedModelViewSet):
     serializer_class = TeamSerializer
     queryset = Team.objects.all()
@@ -41,3 +50,6 @@ class TeamViewSet(OwnedModelViewSet):
 class TeamListView(OwnedModelListView):
     serializer_class = TeamSerializer
     queryset = Team.objects.all()
+
+    def get_queryset(self):
+        return super().get_queryset().order_by("-created_at")

@@ -311,8 +311,9 @@ def persist_ball_and_derived_statistics(
         player=bowler,
     )
     bowler_stats.runs_conceded += runs_off_bat + wide_runs + no_ball_runs
+    # Wides count = total wide runs (penalty + runs taken)
     if is_wide:
-        bowler_stats.wides += 1
+        bowler_stats.wides += wide_runs
     if is_no_ball:
         bowler_stats.no_balls += 1
     if is_legal_delivery:

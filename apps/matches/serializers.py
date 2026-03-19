@@ -45,12 +45,12 @@ class PlayingXIInputSerializer(serializers.Serializer):
         allow_empty=False
     )
     def validate_players(self, players):
-        if len(players) != 11:
-            raise serializers.ValidationError("Exactly 11 players required")
+        if len(players) < 11:
+            raise serializers.ValidationError("At least 11 players required")
         positions = [p.get("batting_position") for p in players]
-        if sorted(positions) != list(range(1, 12)):
+        if sorted(positions) != list(range(1, len(players) + 1)):
             raise serializers.ValidationError(
-                "batting_position must be 1 to 11"
+                "batting_position must be 1 to number of selected players"
             )
         captains = [p for p in players if p.get("is_captain")]
         if len(captains) != 1:

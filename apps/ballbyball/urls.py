@@ -15,6 +15,7 @@ from ballbyball.api.end_match import EndMatchView
 from ballbyball.api.apply_dls import ApplyDLSView
 from ballbyball.api.apply_penalty import ApplyPenaltyView
 from ballbyball.api.declare_innings import DeclareInningsView
+from ballbyball.api.list_match_ball_entries import MatchBallEntriesView
 
 urlpatterns = [
     path(
@@ -66,5 +67,10 @@ urlpatterns = [
         "declare-innings/",
         DeclareInningsView.as_view(),
         name="declare-innings",
+    ),
+    path(
+        "match-ball-entries/",
+        MatchBallEntriesView.as_view(),
+        name="match-ball-entries",
     ),
 ]

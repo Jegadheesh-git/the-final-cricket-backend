@@ -22,6 +22,9 @@ class TournamentListView(OwnedModelListView):
     queryset = Tournament.objects.all() 
     serializer_class = TournamentSerializer 
 
+    def get_queryset(self):
+        return super().get_queryset().order_by("-created_at")
+
 
 class CompetitionViewSet(OwnedModelViewSet):
     queryset = Competition.objects.all()
@@ -31,6 +34,9 @@ class CompetitionListView(OwnedModelListView):
     queryset = Competition.objects.all()
     serializer_class = CompetitionSerializer
 
+    def get_queryset(self):
+        return super().get_queryset().order_by("-created_at")
+
 class SeriesViewSet(OwnedModelViewSet):
     queryset = Series.objects.all()
     serializer_class = SeriesSerializer
@@ -38,6 +44,9 @@ class SeriesViewSet(OwnedModelViewSet):
 class SeriesListView(OwnedModelListView):
     queryset = Series.objects.all()
     serializer_class = SeriesSerializer
+
+    def get_queryset(self):
+        return super().get_queryset().order_by("-created_at")
 
 def validate_competition_editable(request, competition):
     scope = request.scope

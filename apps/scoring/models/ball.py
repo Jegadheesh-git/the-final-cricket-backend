@@ -165,4 +165,4 @@ class Ball(models.Model):
         ]
 
     def __str__(self):
-        return f"Innings {self.innings_id} Ball #{self.ball_number}"
+        return f"Innings {self.innings_id} Ball #{self.ball_number} - M {self.match.id}"

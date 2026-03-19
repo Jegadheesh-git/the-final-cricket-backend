@@ -112,8 +112,9 @@ def rebuild_entire_innings_from_ball_history(*, innings):
         bowler_stats.runs_conceded += (
             ball.runs_off_bat + ball.wide_runs + ball.no_ball_runs
         )
+        # Wides count = total wide runs (penalty + runs taken)
         if ball.wide_runs:
-            bowler_stats.wides += 1
+            bowler_stats.wides += ball.wide_runs
         if ball.no_ball_runs:
             bowler_stats.no_balls += 1
         if ball.is_legal_delivery:

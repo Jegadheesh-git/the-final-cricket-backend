@@ -46,6 +46,9 @@ class MatchViewSet(OwnedModelViewSet):
     
     serializer_class = MatchCreateSerializer
     queryset = Match.objects.all()
+
+    def get_queryset(self):
+        return super().get_queryset().order_by("-created_at")
    
     """
     def perform_create(self, request):
@@ -74,6 +77,9 @@ class MatchViewSet(OwnedModelViewSet):
 class MatchDetailedViewSet(OwnedModelViewSet):
     serializer_class = MatchDetailSerializer
     queryset = Match.objects.all()
+
+    def get_queryset(self):
+        return super().get_queryset().order_by("-created_at")
 
 class PrepareOfflineMatchView(APIView):
     permission_classes = [IsAuthenticated]

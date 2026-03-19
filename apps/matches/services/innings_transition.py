@@ -74,7 +74,29 @@ def prepare_next_innings(
     if completed_count >= max_allowed:
         raise ValueError("No more standard innings allowed")
 
-    new_number = completed_count + 1
+    existing_open_any = Innings.objects.filter(
+        match=match,
+        state="OPEN",
+        is_super_over=False,
+    ).order_by("innings_number").first()
+
+    if existing_open_any:
+        existing_open_any.batting_team = (
+            last.bowling_team if not enforce_follow_on else last.batting_team
+        )
+        existing_open_any.bowling_team = (
+            last.batting_team if not enforce_follow_on else last.bowling_team
+        )
+        existing_open_any.save(update_fields=["batting_team", "bowling_team"])
+        return existing_open_any
+
+    max_number = (
+        Innings.objects.filter(match=match, is_super_over=False)
+        .order_by("-innings_number")
+        .values_list("innings_number", flat=True)
+        .first()
+    ) or 0
+    new_number = max_number + 1
     
     # Follow-On Logic
     if enforce_follow_on:
@@ -90,17 +112,19 @@ def prepare_next_innings(
         batting_team = last.bowling_team
         bowling_team = last.batting_team
 
-    existing_open = Innings.objects.filter(
+    # if we somehow have an OPEN with the new_number, reuse it
+    existing_open_number = Innings.objects.filter(
         match=match,
-        batting_team=batting_team,
+        innings_number=new_number,
         state="OPEN",
-        is_super_over=False
-    ).order_by("innings_number").first()
+        is_super_over=False,
+    ).first()
 
-    if existing_open:
-        existing_open.bowling_team = bowling_team
-        existing_open.save(update_fields=["bowling_team"])
-        return existing_open
+    if existing_open_number:
+        existing_open_number.batting_team = batting_team
+        existing_open_number.bowling_team = bowling_team
+        existing_open_number.save(update_fields=["batting_team", "bowling_team"])
+        return existing_open_number
 
     return Innings.objects.create(
         match=match,

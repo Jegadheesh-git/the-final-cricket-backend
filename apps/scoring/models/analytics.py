@@ -24,11 +24,25 @@ class BallAnalytics(models.Model):
         help_text="Yorker, bouncer, good length, full toss, etc."
     )
 
-    crease_movement = models.CharField(
+    foot_movement = models.CharField(
         max_length=30,
         null=True,
         blank=True,
-        help_text="Bowler movement on the crease"
+        help_text="Batter foot movement"
+    )
+
+    air_movement = models.CharField(
+        max_length=30,
+        null=True,
+        blank=True,
+        help_text="Ball air movement profile"
+    )
+
+    control = models.CharField(
+        max_length=30,
+        null=True,
+        blank=True,
+        help_text="Whether the air movement was controlled"
     )
 
     # 🏏 Batting interaction

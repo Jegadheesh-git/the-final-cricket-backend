@@ -50,12 +50,25 @@ class StartNextInningsView(APIView):
                 status=400,
             )
 
-        innings = prepare_next_innings(
-            match_id=match.id,
-            is_super_over=is_super_over,
-            enforce_follow_on=enforce_follow_on,
-        )
+        # Close any existing ACTIVE innings to avoid multiple actives
+        Innings.objects.filter(
+            match=match,
+            state=Innings.State.ACTIVE
+        ).update(state=Innings.State.COMPLETED)
 
+        try:
+            innings = prepare_next_innings(
+                match_id=match.id,
+                is_super_over=is_super_over,
+                enforce_follow_on=enforce_follow_on,
+            )
+        except ValueError as exc:
+            return Response(
+                {"detail": str(exc)},
+                status=409,
+            )
+
+        was_open = innings.state == Innings.State.OPEN
         innings.state = Innings.State.ACTIVE
         innings.start_time = timezone.now()
         innings.save(update_fields=["state", "start_time"])
@@ -63,9 +76,27 @@ class StartNextInningsView(APIView):
         match.state = "IN_PROGRESS"
         match.save(update_fields=["state"])
 
-        aggregate, _ = InningsAggregate.objects.get_or_create(
+        aggregate, created = InningsAggregate.objects.get_or_create(
             innings=innings
         )
+        if was_open and not created:
+            # Reset reused OPEN innings aggregate (keep penalty runs)
+            penalty_runs = aggregate.extra_penalty_runs or 0
+            aggregate.runs = penalty_runs
+            aggregate.extras = penalty_runs
+            aggregate.wickets = 0
+            aggregate.legal_balls = 0
+            aggregate.completed_overs = 0
+            aggregate.current_striker = None
+            aggregate.current_non_striker = None
+            aggregate.current_bowler = None
+            aggregate.last_ball = None
+            aggregate.is_chasing = False
+            aggregate.target_runs = None
+            aggregate.revised_target_runs = None
+            aggregate.max_overs = None
+            aggregate.target_achieved = False
+            aggregate.save()
 
         # Set chase targets where applicable
         if not innings.is_super_over:

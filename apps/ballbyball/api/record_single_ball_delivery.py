@@ -65,7 +65,7 @@ class RecordSingleBallDeliveryView(APIView):
 
         innings = match.innings.filter(
             state=Innings.State.ACTIVE
-        ).first()
+        ).order_by("-innings_number").first()
         if not innings:
             return Response(
                 {"detail": "No active innings"},
