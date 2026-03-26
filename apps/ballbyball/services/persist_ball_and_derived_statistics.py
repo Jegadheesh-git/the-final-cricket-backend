@@ -227,6 +227,24 @@ def persist_ball_and_derived_statistics(
         )
 
     if fielding:
+        fielders = fielding.get("fielders", [])
+
+        if not isinstance(fielders, list):
+            raise ValueError("fielding.fielders must be a list")
+
+        for f in fielders:
+            payload = normalize_keys(f)
+
+            if "player" in payload:
+                payload["player_id"] = payload.pop("player")
+
+            BallFielding.objects.create(
+                ball=ball,
+                **payload,
+            )
+
+    """
+    if fielding:
         fielding_payload = normalize_keys(fielding)
         # Accept UUIDs from frontend for fielder1/fielder2
         if "fielder1" in fielding_payload:
@@ -237,7 +255,7 @@ def persist_ball_and_derived_statistics(
             ball=ball,
             **fielding_payload,
         )
-
+    """
     if drs:
         drs_payload = normalize_keys(drs)
         if "review_team_id" in drs_payload:

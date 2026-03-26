@@ -11,18 +11,18 @@ class BallFielding(models.Model):
 
     id = models.UUIDField(primary_key=True, default=uuid.uuid4, editable=False)
 
-    ball = models.OneToOneField(
+    ball = models.ForeignKey(
         Ball,
         on_delete=models.CASCADE,
-        related_name="fielding"
+        related_name="fieldings"
     )
 
-    fielder1 = models.ForeignKey(
+    player = models.ForeignKey(
         Player,
         null=True,
         blank=True,
         on_delete=models.PROTECT,
-        related_name="fielding_primary"
+        related_name="fielding_entries"
     )
 
     fielder2 = models.ForeignKey(

@@ -43,6 +43,14 @@ class BallReleaseData(models.Model):
         help_text="Standing up / back"
     )
 
+    ball_type = models.CharField(
+        max_length=20,
+        null=True,
+        blank=True,
+        help_text="New / Replacement ball"
+    )
+
+
     created_at = models.DateTimeField(auto_now_add=True)
 
     class Meta:
