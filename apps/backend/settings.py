@@ -154,59 +154,73 @@ MEDIA_URL = '/media/'
 MEDIA_ROOT = BASE_DIR / 'media'
 STATIC_ROOT = BASE_DIR / 'staticfiles'
 
+# =========================
+# CORS + CSRF (PRODUCTION SAFE)
+# =========================
+
+from corsheaders.defaults import default_headers, default_methods
+
+# ✅ Allow your frontend domains
+CORS_ALLOWED_ORIGINS = [
+    "https://zencricketdata.com",
+    "https://www.zencricketdata.com",
+]
+
+# ✅ Required for cookies / auth
 CORS_ALLOW_CREDENTIALS = True
 
-CORS_ALLOWED_ORIGINS = env_list("CORS_ALLOWED_ORIGINS")
-CSRF_TRUSTED_ORIGINS = env_list("CSRF_TRUSTED_ORIGINS")
+# ✅ Allow all necessary headers (fixes preflight)
+CORS_ALLOW_HEADERS = list(default_headers) + [
+    "authorization",
+    "content-type",
+    "x-csrftoken",
+    "x-requested-with",
+]
 
-SESSION_COOKIE_NAME = env_str("SESSION_COOKIE_NAME", "sessionid")
-CSRF_COOKIE_NAME = env_str("CSRF_COOKIE_NAME", "csrftoken")
-SESSION_COOKIE_DOMAIN = env_str("SESSION_COOKIE_DOMAIN", None)
-CSRF_COOKIE_DOMAIN = env_str("CSRF_COOKIE_DOMAIN", None)
+# ✅ Allow all methods including OPTIONS
+CORS_ALLOW_METHODS = list(default_methods)
 
-default_cookie_samesite = "Lax" if DEBUG else "None"
-SESSION_COOKIE_SAMESITE = os.getenv("SESSION_COOKIE_SAMESITE", default_cookie_samesite)
-CSRF_COOKIE_SAMESITE = os.getenv("CSRF_COOKIE_SAMESITE", default_cookie_samesite)
+# Optional but good
+CORS_PREFLIGHT_MAX_AGE = 86400
 
-SESSION_COOKIE_SECURE = env_bool("SESSION_COOKIE_SECURE", not DEBUG)
-CSRF_COOKIE_SECURE = env_bool("CSRF_COOKIE_SECURE", not DEBUG)
 
-# Browsers reject SameSite=None cookies unless they are also Secure.
-if SESSION_COOKIE_SAMESITE == "None" and not SESSION_COOKIE_SECURE:
-    SESSION_COOKIE_SAMESITE = "Lax"
+# =========================
+# CSRF
+# =========================
 
-if CSRF_COOKIE_SAMESITE == "None" and not CSRF_COOKIE_SECURE:
-    CSRF_COOKIE_SAMESITE = "Lax"
+CSRF_TRUSTED_ORIGINS = [
+    "https://zencricketdata.com",
+    "https://www.zencricketdata.com",
+]
 
-if DEBUG:
-    dev_origins = [
-        "http://localhost:5173",
-        "http://127.0.0.1:5173",
-        "http://localhost:5174",
-        "http://127.0.0.1:5174",
-    ]
-    for origin in dev_origins:
-        if origin not in CORS_ALLOWED_ORIGINS:
-            CORS_ALLOWED_ORIGINS.append(origin)
-        if origin not in CSRF_TRUSTED_ORIGINS:
-            CSRF_TRUSTED_ORIGINS.append(origin)
-    SESSION_COOKIE_SECURE = env_bool("SESSION_COOKIE_SECURE", False)
-    CSRF_COOKIE_SECURE = env_bool("CSRF_COOKIE_SECURE", False)
+
+# =========================
+# COOKIES (CRITICAL)
+# =========================
+
+SESSION_COOKIE_NAME = "sessionid"
+CSRF_COOKIE_NAME = "csrftoken"
+
+# MUST be None for cross-site cookies
+SESSION_COOKIE_SAMESITE = "None"
+CSRF_COOKIE_SAMESITE = "None"
+
+# MUST be True for SameSite=None
+SESSION_COOKIE_SECURE = True
+CSRF_COOKIE_SECURE = True
+
+# Optional but safe
+SESSION_COOKIE_HTTPONLY = True
+CSRF_COOKIE_HTTPONLY = False
+
+
+# =========================
+# PROXY SETTINGS (IMPORTANT FOR NGINX)
+# =========================
 
 SECURE_PROXY_SSL_HEADER = ("HTTP_X_FORWARDED_PROTO", "https")
-USE_X_FORWARDED_HOST = env_bool("USE_X_FORWARDED_HOST", not DEBUG)
-SECURE_SSL_REDIRECT = env_bool("SECURE_SSL_REDIRECT", not DEBUG)
-SECURE_HSTS_SECONDS = int(env_str("SECURE_HSTS_SECONDS", "0" if DEBUG else "31536000"))
-SECURE_HSTS_INCLUDE_SUBDOMAINS = env_bool(
-    "SECURE_HSTS_INCLUDE_SUBDOMAINS", not DEBUG
-)
-SECURE_HSTS_PRELOAD = env_bool("SECURE_HSTS_PRELOAD", False)
-SECURE_CONTENT_TYPE_NOSNIFF = env_bool("SECURE_CONTENT_TYPE_NOSNIFF", True)
-SECURE_REFERRER_POLICY = env_str(
-    "SECURE_REFERRER_POLICY", "strict-origin-when-cross-origin"
-)
-CSRF_COOKIE_HTTPONLY = env_bool("CSRF_COOKIE_HTTPONLY", False)
-SESSION_COOKIE_HTTPONLY = env_bool("SESSION_COOKIE_HTTPONLY", True)
+USE_X_FORWARDED_HOST = True
+SECURE_SSL_REDIRECT = True
 
 
 REST_FRAMEWORK = {
