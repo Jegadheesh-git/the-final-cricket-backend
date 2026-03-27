@@ -69,8 +69,8 @@ INSTALLED_APPS = [
 ]
 
 MIDDLEWARE = [
-    'corsheaders.middleware.CorsMiddleware',
     'django.middleware.security.SecurityMiddleware',
+    'corsheaders.middleware.CorsMiddleware',
     'whitenoise.middleware.WhiteNoiseMiddleware',
     'django.contrib.sessions.middleware.SessionMiddleware',
     'django.middleware.common.CommonMiddleware',
@@ -78,7 +78,7 @@ MIDDLEWARE = [
     'django.contrib.auth.middleware.AuthenticationMiddleware',
 
     #custom middleware for scope
-    #'backend.core.middleware.ScopeMiddleware',
+    'backend.core.middleware.ScopeMiddleware',
 
     'django.contrib.messages.middleware.MessageMiddleware',
     'django.middleware.clickjacking.XFrameOptionsMiddleware',
@@ -158,30 +158,16 @@ STATIC_ROOT = BASE_DIR / 'staticfiles'
 # CORS + CSRF (PRODUCTION SAFE)
 # =========================
 
-from corsheaders.defaults import default_headers, default_methods
-
-# ✅ Allow your frontend domains
 CORS_ALLOWED_ORIGINS = [
     "https://zencricketdata.com",
     "https://www.zencricketdata.com",
+    "http://localhost:5173",
+    "http://127.0.0.1:5173"
 ]
 
-# ✅ Required for cookies / auth
 CORS_ALLOW_CREDENTIALS = True
 
-# ✅ Allow all necessary headers (fixes preflight)
-CORS_ALLOW_HEADERS = list(default_headers) + [
-    "authorization",
-    "content-type",
-    "x-csrftoken",
-    "x-requested-with",
-]
 
-# ✅ Allow all methods including OPTIONS
-CORS_ALLOW_METHODS = list(default_methods)
-
-# Optional but good
-CORS_PREFLIGHT_MAX_AGE = 86400
 
 
 # =========================
@@ -191,36 +177,9 @@ CORS_PREFLIGHT_MAX_AGE = 86400
 CSRF_TRUSTED_ORIGINS = [
     "https://zencricketdata.com",
     "https://www.zencricketdata.com",
+    "https://localhost:5173",
+    "http://127.0.0.1:5173"
 ]
-
-
-# =========================
-# COOKIES (CRITICAL)
-# =========================
-
-SESSION_COOKIE_NAME = "sessionid"
-CSRF_COOKIE_NAME = "csrftoken"
-
-# MUST be None for cross-site cookies
-SESSION_COOKIE_SAMESITE = "None"
-CSRF_COOKIE_SAMESITE = "None"
-
-# MUST be True for SameSite=None
-SESSION_COOKIE_SECURE = True
-CSRF_COOKIE_SECURE = True
-
-# Optional but safe
-SESSION_COOKIE_HTTPONLY = True
-CSRF_COOKIE_HTTPONLY = False
-
-
-# =========================
-# PROXY SETTINGS (IMPORTANT FOR NGINX)
-# =========================
-
-SECURE_PROXY_SSL_HEADER = ("HTTP_X_FORWARDED_PROTO", "https")
-USE_X_FORWARDED_HOST = True
-SECURE_SSL_REDIRECT = True
 
 
 REST_FRAMEWORK = {
