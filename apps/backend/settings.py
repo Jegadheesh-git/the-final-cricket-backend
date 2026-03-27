@@ -158,6 +158,7 @@ STATIC_ROOT = BASE_DIR / 'staticfiles'
 # CORS + CSRF (PRODUCTION SAFE)
 # =========================
 
+"""
 CORS_ALLOWED_ORIGINS = [
     "https://zencricketdata.com",
     "https://www.zencricketdata.com",
@@ -167,7 +168,9 @@ CORS_ALLOWED_ORIGINS = [
 
 CORS_ALLOW_CREDENTIALS = True
 
-
+"""
+CORS_ALLOW_ALL_ORIGINS = True
+CORS_ALLOW_CREDENTIALS = False
 
 
 # =========================
