@@ -87,6 +87,15 @@ class Umpire(OwnedModel):
         on_delete = models.PROTECT,
         related_name="umpires" 
     )
+    ROLE_CHOICES = (
+        ("UMPIRE", "Male"),
+        ("REFEREE", "Referee"),
+    )
+    role = models.CharField(
+        max_length=10,
+        choices=ROLE_CHOICES,
+        default="UMPIRE"
+    )
 
     class Meta:
         unique_together = (

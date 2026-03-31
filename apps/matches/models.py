@@ -122,7 +122,7 @@ class Match(OwnedModel):
         if self.team1 == self.team2:
             raise ValidationError("Teams must be different")
     def __str__(self):
-        return f"{self.team1} vs {self.team2}"
+        return f"{self.team1} vs {self.team2} - {self.id}"
 
 class PlayingXI(models.Model):
     match = models.ForeignKey(
@@ -246,7 +246,7 @@ class Innings(models.Model):
         ]
 
     def __str__(self):
-        label = f"Innings {self.innings_number}"
+        label = f"Innings {self.innings_number} match {self.match.id}"
         if self.is_super_over:
             label += f" (Super Over {self.super_over_index})"
         return f"{label} - {self.batting_team}"

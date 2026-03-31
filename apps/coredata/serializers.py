@@ -51,6 +51,7 @@ class UmpireSerializer(OwnedModelSerializer):
             "nationality",
             "owner_type",
             "is_locked",
+            "role"
         )
 
         read_only_fields = (

@@ -46,6 +46,7 @@ class OwnedModelViewSet(BaseScopedModelViewSet):
         serializer.save()
 
     def perform_destroy(self, instance):
+        
         if instance.owner_type == "SYSTEM" or instance.is_locked:
             raise PermissionDenied("System data cannot be deleted")
         instance.delete()

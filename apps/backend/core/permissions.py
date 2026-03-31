@@ -22,6 +22,7 @@ class ScopeRBACPermission(BasePermission):
         return scope.role in ["OWNER", "ADMIN"]
 
     def has_object_permission(self, request, view, obj):
+        
         scope = request.scope
 
         # SYSTEM data → read-only for everyone
@@ -29,9 +30,10 @@ class ScopeRBACPermission(BasePermission):
             return request.method in SAFE_METHODS
 
         # ORG / USER → must match scope exactly
+
         return (
-            obj.owner_type == scope.owner_type
-            and obj.owner_id == scope.owner_id
+           obj.owner_type == scope.owner_type
+           and obj.owner_id.int == int(scope.owner_id)
         )
 
 
@@ -39,6 +41,8 @@ class SubscriptionPermission(BasePermission):
 
     def has_permission(self, request, view):
         scope = request.scope
+
+
 
         # No subscription → allow reads only
         if not scope.subscription:

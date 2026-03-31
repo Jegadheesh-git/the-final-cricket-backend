@@ -217,7 +217,7 @@ SIMPLE_JWT = {
     "AUTH_HEADER_TYPES": ("Bearer",),
 }
 
-
+"""
 LOGGING = {
     'version': 1,
     'disable_existing_loggers': False,
@@ -238,3 +238,4 @@ LOGGING = {
         },
     },
 }
+"""

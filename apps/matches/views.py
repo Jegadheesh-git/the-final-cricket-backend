@@ -355,19 +355,34 @@ class InningsView(APIView):
         ensure_no_active_innings(match)
         serializer = InningsCreateSerializer(data=request.data)
         serializer.is_valid(raise_exception=True)
-        batting_team = serializer.validated_data["batting_team"]
+
+        toss = match.toss
+        if ((toss.won_by == match.team1 and toss.decision == "BAT") or
+            (toss.won_by == match.team2 and toss.decision == "BOWL")):
+            batting_team = match.team1
+            
+        else:
+            batting_team = match.team2
+        #batting_team = serializer.validated_data["batting_team"]
         ensure_team_in_match(match, batting_team)
         bowling_team = (
             match.team2_id
             if batting_team == match.team1_id
             else match.team1_id
         )
+
+        print("Innings creation....")
+        print("batting team: ", batting_team)
+        print("bowling team: ", bowling_team)
         innings = Innings.objects.create(
             match=match,
             batting_team_id=batting_team,
             bowling_team_id=bowling_team,
             innings_number=next_innings_number(match),
         )
+
+
+
         # First innings starts match
         if match.state == "READY":
             match.state = "IN_PROGRESS"
