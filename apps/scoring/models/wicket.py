@@ -1,6 +1,6 @@
 import uuid
 from django.db import models
-from coredata.models import Player, Team
+from coredata.models import Player, Team, Umpire
 from scoring.models import Ball
 
 class BallWicket(models.Model):
@@ -80,6 +80,14 @@ class BallWicket(models.Model):
         blank=True,
         on_delete=models.PROTECT,
         related_name="run_outs_secondary"
+    )
+
+    decision_given_by_umpire = models.ForeignKey(
+        Umpire,
+        null=True,
+        blank=True,
+        on_delete=models.PROTECT,
+        related_name="decisions_given"
     )
 
     created_at = models.DateTimeField(auto_now_add=True)

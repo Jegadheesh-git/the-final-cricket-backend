@@ -13,21 +13,35 @@ from matches.models import PlayingXI
 
 
 def get_selectable_players(*, match, innings):
-    batting_players = Player.objects.filter(
-        id__in=PlayingXI.objects.filter(
-            match=match,
-            team=innings.batting_team
-        ).values_list("player_id", flat=True)
-    )
+    batting_players = PlayingXI.objects.filter(
+        match=match,
+        team=innings.batting_team
+    ).select_related("player").order_by("batting_position")
 
-    bowling_players = Player.objects.filter(
-        id__in=PlayingXI.objects.filter(
-            match=match,
-            team=innings.bowling_team
-        ).values_list("player_id", flat=True)
-    )
+    bowling_players = PlayingXI.objects.filter(
+        match=match,
+        team=innings.bowling_team
+    ).select_related("player").order_by("-batting_position")  # 🔥 reverse
 
     return {
-        "batters": list(batting_players.values("id", "first_name", "batting_hand")),
-        "bowlers": list(bowling_players.values("id", "first_name", "bowling_hand")),
+        "batters": [
+            {
+                "id": xi.player.id,
+                "first_name": xi.player.first_name,
+                "last_name": xi.player.first_name,
+                "nick_name": xi.player.nick_name,
+                "batting_hand": xi.player.batting_hand,
+            }
+            for xi in batting_players
+        ],
+        "bowlers": [
+            {
+                "id": xi.player.id,
+                "first_name": xi.player.first_name,
+                "last_name": xi.player.last_name,
+                "nick_name": xi.player.nick_name,
+                "bowling_hand": xi.player.bowling_hand,
+            }
+            for xi in bowling_players
+        ],
     }

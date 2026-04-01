@@ -19,7 +19,7 @@ class ScopeRBACPermission(BasePermission):
         if scope.owner_type == "USER":
             return True
 
-        return scope.role in ["OWNER", "ADMIN"]
+        return scope.role in ["OWNER", "ADMIN","MEMBER"]
 
     def has_object_permission(self, request, view, obj):
         

@@ -74,8 +74,13 @@ class Match(OwnedModel):
     )
     umpires = models.ManyToManyField(
         Umpire,
-        blank=True
+        blank=True,
+        related_name="matches_umpires"
     )
+
+    third_umpire = models.ForeignKey(Umpire, blank=True, null=True, on_delete=models.SET_NULL, related_name="matches_as_third_ump")
+    match_referee = models.ForeignKey(Umpire, blank=True, null=True, on_delete=models.SET_NULL, related_name="matches_as_referee")
+    
     match_date = models.DateField(null=True, blank=True)
     start_time = models.TimeField(null=True, blank=True)
     # EXECUTION MODE
