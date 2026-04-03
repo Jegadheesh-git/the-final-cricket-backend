@@ -48,6 +48,11 @@ class BallFielding(models.Model):
     runs_saved = models.PositiveIntegerField(null=True, blank=True)
     runs_misfielded = models.PositiveIntegerField(null=True, blank=True)
     overthrow_runs = models.PositiveIntegerField(null=True, blank=True)
+    difficulty = models.CharField(
+        max_length=20,
+        null=True,
+        blank=True
+    )
 
     created_at = models.DateTimeField(auto_now_add=True)
 

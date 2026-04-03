@@ -61,6 +61,12 @@ class BallSpatialOutcome(models.Model):
         blank=True,
         help_text="Height zone selected from matrix"
     )
+    batter_stump_zone = models.CharField(
+        max_length=20,
+        null=True,
+        blank=True,
+        help_text="Batter stump zone selected from matrix"
+    )
 
     # Structured field engine selection
     structured_region_id = models.CharField(

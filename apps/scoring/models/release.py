@@ -49,6 +49,16 @@ class BallReleaseData(models.Model):
         blank=True,
         help_text="New / Replacement ball"
     )
+    is_break = models.BooleanField(
+        default=False,
+        help_text="Whether a break follows this ball"
+    )
+    break_type = models.CharField(
+        max_length=50,
+        null=True,
+        blank=True,
+        help_text="Type of break following this ball"
+    )
 
 
     created_at = models.DateTimeField(auto_now_add=True)

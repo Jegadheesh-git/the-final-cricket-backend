@@ -180,6 +180,8 @@ class MatchBallEntriesView(APIView):
                             "wagon_wheel_y": spatial.wagon_wheel_y,
                             "pitch_zone": spatial.pitch_zone,
                             "stump_zone": spatial.stump_zone,
+                            "height_zone": spatial.height_zone,
+                            "batter_stump_zone": spatial.batter_stump_zone,
                             "structured_region_id": spatial.structured_region_id,
                             "structured_slice_index": spatial.structured_slice_index,
                             "structured_band_index": spatial.structured_band_index,
@@ -194,6 +196,9 @@ class MatchBallEntriesView(APIView):
                             "bowler_release_y": release.bowler_release_y,
                             "bowler_release_position": release.bowler_release_position,
                             "wicket_keeper_position": release.wicket_keeper_position,
+                            "ball_type": release.ball_type,
+                            "is_break": release.is_break,
+                            "break_type": release.break_type,
                         }
                         if release
                         else None
@@ -207,6 +212,7 @@ class MatchBallEntriesView(APIView):
                             "runs_saved": fielding.runs_saved,
                             "runs_misfielded": fielding.runs_misfielded,
                             "overthrow_runs": fielding.overthrow_runs,
+                            "difficulty": fielding.difficulty,
                         }
                         if fielding
                         else None

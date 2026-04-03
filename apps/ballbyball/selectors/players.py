@@ -28,7 +28,7 @@ def get_selectable_players(*, match, innings):
             {
                 "id": xi.player.id,
                 "first_name": xi.player.first_name,
-                "last_name": xi.player.first_name,
+                "last_name": xi.player.last_name,
                 "nick_name": xi.player.nick_name,
                 "batting_hand": xi.player.batting_hand,
             }
